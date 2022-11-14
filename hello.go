@@ -40,6 +40,7 @@ func main() {
 
 }
 
+// Informa introdução da Aplicação (Nome usuario/Versão)
 func exibeIntro() {
 	// variaveis podem ou não ter o tipo declarado.
 	var nome string = "Thiago"
@@ -49,17 +50,23 @@ func exibeIntro() {
 	fmt.Println("Olá senhor,", nome)
 	fmt.Println("Você esta na versão,", versao)
 }
+
+// Recebe entrada do usuario para executar tarefas
 func leComando() int {
 	var comandoLido int
 	fmt.Scan(&comandoLido)
 	return comandoLido
 
 }
+
+// Menu de opção de tarefa
 func exibeMenu() {
 	fmt.Println("1 - Iniciar monitoramento")
 	fmt.Println("2 - Exibir Logs")
 	fmt.Println("3 - Sair")
 }
+
+// Realiza monitoramento dos sites listados no arquivo sites.txt
 func iniciaMonitoramento() {
 	sites := leSitesdoArquivo()
 
@@ -79,6 +86,8 @@ func iniciaMonitoramento() {
 	fmt.Println("")
 
 }
+
+// Realiza os testes de disponibilidade do site
 func testaSite(site string) {
 
 	// go permite mais de um retorno nas funções  | "_" foi usado para ignorar um segundo parametro obrigatorio
@@ -97,6 +106,8 @@ func testaSite(site string) {
 		registralog(site, false)
 	}
 }
+
+// Responsavel por ler o arquivo sites e formatar saídas
 func leSitesdoArquivo() []string {
 	var sites []string
 	arquivo, err := os.Open("sites.txt")
