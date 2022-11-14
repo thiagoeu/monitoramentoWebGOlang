@@ -4,8 +4,10 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -26,7 +28,7 @@ func main() {
 		case 1:
 			iniciaMonitoramento()
 		case 2:
-			fmt.Println("exibindo...")
+			exibeLog()
 		case 3:
 			fmt.Println("saindo...")
 			os.Exit(0)
@@ -89,8 +91,10 @@ func testaSite(site string) {
 	// status 200 significa que o site está funcionanto bem
 	if resp.StatusCode == 200 {
 		fmt.Println("Site:", site, "foi carregado com sucesso")
+		registralog(site, true)
 	} else {
 		fmt.Println("Site:", site, "esta com problemas statuscode:", resp.StatusCode)
+		registralog(site, false)
 	}
 }
 func leSitesdoArquivo() []string {
@@ -117,4 +121,28 @@ func leSitesdoArquivo() []string {
 	}
 	arquivo.Close()
 	return sites
+}
+
+// Função de registro (obs: os.OpenFile foi usado pois possui mais recursos, como os de criar um arquivo caso ele não exista)
+func registralog(site string, status bool) {
+
+	arquivo, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	arquivo.WriteString(time.Now().Format("02/01/2006 15:04:05") + " " + site + " - online:" + strconv.FormatBool(status) + "\n")
+	arquivo.Close()
+}
+
+// Função que exibe logs (obs: "ioutil.ReadFile("log.txt")", não é necessario usar o close(), pois o pacote já faz isso automaticamente )
+func exibeLog() {
+	arquivo, err := ioutil.ReadFile("log.txt")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(string(arquivo))
 }
